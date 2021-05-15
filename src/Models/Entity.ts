@@ -85,22 +85,20 @@ class Entity {
     public Show(): any {
         let cMale = color(255, 204, 0);
         let cFemale = color(255, 51, 204);
-
-        // Radius
-        stroke(color(102, 255, 153));
-        strokeWeight(1);
-        noFill();
-        circle(this.Position.x, this.Position.y, this.VisionRadius * 2);
-
-        // The entity
-        strokeWeight(15);
-
         if (this.Gender == Gender.Male) {
             stroke(cMale);
         }
         else {
             stroke(cFemale);
         }
+        
+        // Radius
+        strokeWeight(1);
+        noFill();
+        circle(this.Position.x, this.Position.y, this.VisionRadius * 2);
+
+        // The entity
+        strokeWeight(15);
         point(this.Position.x, this.Position.y);
 
         // Line to food
