@@ -1,4 +1,3 @@
-
 // Entities and Food
 let maxFoodEntities : number = 50;
 let entities: Entity[] = [];
@@ -32,12 +31,15 @@ function setup() {
   div = createDiv("C");
   div.position(sideBarXLocation, 50)
   // INITIALISE LIST
-  for (let i = 0; i < numOfEntities; i++) {
+  for (let i = 0; i < numOfEntities; i++) 
+  {
     let entity = new Entity();
     entities.push(entity);
   }
 }
-function draw() {
+
+function draw() 
+{
   // CLEAR BACKGROUND
   background(50);
 

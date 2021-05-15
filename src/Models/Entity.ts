@@ -15,12 +15,12 @@ class Entity {
         this.DayStart = days;
     }
 
-    private SpawnRandom(): any {
+    private SpawnRandom() : any {
         this.Position = createVector(random(width), random(height));
         this.RotationAngleRadian = PI / 180 * this.RotationAngle;
     }
 
-    public UpdateMovement(): any {
+    public UpdateMovement() : any {
         if (this.FindFood()) {
             if (this.Position.equals(this.FoodTarget.Position)) {
                 this.FoodTarget.Consumed = true;
@@ -51,7 +51,7 @@ class Entity {
         this.Position.add(this.Velocity);
     }
 
-    private FindFood(): boolean {
+    private FindFood() : boolean {
         // Is currently targeted food sourced consumed by someone else?
         if (this.FoodTarget?.Consumed) {
             this.FoodTarget = null;
@@ -68,7 +68,7 @@ class Entity {
 
         return this.FoodTarget != null;
     }
-    public Wander(): any {
+    public Wander() : any {
         if (NumberHelper.RandomPercentage(this.NoiseRandomness)) {
             this.Velocity = this.Velocity.rotate(random(-this.RotationAngleRadian, this.RotationAngleRadian))
         }
