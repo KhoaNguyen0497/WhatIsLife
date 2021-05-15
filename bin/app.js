@@ -1,6 +1,6 @@
 var speed;
 var entities = [];
-var numOfEntities = 1;
+var numOfEntities = 10;
 function setup() {
     console.log("🚀 - Setup initialized - P5 is running");
     createCanvas(windowWidth - 200, windowHeight);
@@ -140,7 +140,7 @@ var Entity = (function () {
     return Entity;
 }());
 var foodList = [];
-var maxFoodEntities = 20;
+var maxFoodEntities = 50;
 var Food = (function () {
     function Food() {
         this.Consumed = false;

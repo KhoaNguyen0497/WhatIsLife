@@ -1,7 +1,7 @@
 // GLOBAL VARS & TYPES
 let speed: p5.Element;
 let entities: Entity[] = [];
-let numOfEntities: number = 1;
+let numOfEntities: number = 10;
 
 function setup() {
   console.log("🚀 - Setup initialized - P5 is running");

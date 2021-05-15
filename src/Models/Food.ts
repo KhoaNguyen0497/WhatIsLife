@@ -1,5 +1,5 @@
 let foodList : Food[] = [];
-let maxFoodEntities : number = 20;
+let maxFoodEntities : number = 50;
 
 class Food{
     public Position: p5.Vector
