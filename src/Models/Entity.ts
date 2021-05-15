@@ -47,9 +47,6 @@ class Entity {
             this.Wander();
         }
 
-        if (this.FoodTarget != null) {
-            console.log(this.FoodTarget.Position.x + ";" + this.FoodTarget.Position.y);
-        }
         this.Age = days - this.DayStart;
         this.Position.add(this.Velocity);
     }
