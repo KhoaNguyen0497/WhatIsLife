@@ -1,5 +1,5 @@
 let foodList : Food[] = [];
-let maxFoodEntities : number = 50;
+
 
 class Food
 {
