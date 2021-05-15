@@ -9,6 +9,8 @@ class Entity {
     RotationAngleRadian: number; // The above as radian
     NoiseRandomness: number = 20 // %chance to turn each frame
     Age: number;
+    Weight : number = 0;
+
     private DayStart: number;
     constructor() {
         this.SpawnRandom();
@@ -24,6 +26,7 @@ class Entity {
         if (this.FindFood()) {
             if (this.Position.equals(this.FoodTarget.Position)) {
                 this.FoodTarget.Consumed = true;
+                this.Weight += 1;
 
                 // Reset Velocity
                 this.Velocity.normalize().mult(this.Speed);
@@ -98,7 +101,7 @@ class Entity {
         circle(this.Position.x, this.Position.y, this.VisionRadius * 2);
 
         // The entity
-        strokeWeight(15);
+        strokeWeight(this.Weight + 10);
         point(this.Position.x, this.Position.y);
 
         // Line to food

@@ -5,8 +5,9 @@ Natural Selection Simulation
 
 ## How run
 ```
+npm install -g typescript
 npm i
-npm run start-run
+npm start
 ```
 
 # To do

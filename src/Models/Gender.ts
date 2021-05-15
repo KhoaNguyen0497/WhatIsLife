@@ -1,4 +1,5 @@
-enum Gender {
+enum Gender 
+{
     Male,
     Female
-  }
+}
