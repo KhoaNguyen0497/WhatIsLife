@@ -1,7 +1,7 @@
 // Entities and Food
 let maxFoodEntities : number = 50;
 let entities: Entity[] = [];
-let numOfEntities: number = 10;
+let numOfEntities: number = 1;
 
 // Frames & days
 let fps: number = 60; // PC MASTER RACE
@@ -56,12 +56,22 @@ function draw()
 
 function processFrame() {
   actualFrameCount+=1;
-  days = floor(actualFrameCount / framesPerDay);
-  Food.SpawnFood();
+
+  // Check for day change to trigger certain events
+  let tempDay: number = floor(actualFrameCount / framesPerDay);
+  if (tempDay > days){
+    days = tempDay;
+    Food.SpawnFood();
+  }
+ 
+
   entities.forEach(entity => {
     entity.UpdateMovement();
   });
-
+  foodList = foodList.filter((food) =>
+  {
+      return !food.Consumed;
+  });
 
 }
 

@@ -18,11 +18,6 @@ class Food
     
     public static SpawnFood() : any
     {
-        foodList = foodList.filter((food) =>
-        {
-            return !food.Consumed;
-        });
-
         while (foodList.length < maxFoodEntities)
         {
             let food = new Food();
