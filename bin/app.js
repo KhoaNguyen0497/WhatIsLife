@@ -1,14 +1,24 @@
-var speed;
+var maxFoodEntities = 50;
 var entities = [];
 var numOfEntities = 10;
+var fps = 60;
+var framesPerDay = fps * 5;
+var days = 0;
+var actualFrameCount = 0;
+var speed;
+var sideBarXLocation;
+var div;
 function setup() {
     console.log("🚀 - Setup initialized - P5 is running");
     createCanvas(windowWidth - 200, windowHeight);
     rectMode(CENTER);
     frameRate(60);
+    sideBarXLocation = windowWidth - 190;
     speed = createSlider(0, 10, 0, 0);
-    speed.position(windowWidth - 190, 10);
+    speed.position(sideBarXLocation, 10);
     speed.style("width", "160px");
+    div = createDiv("C");
+    div.position(sideBarXLocation, 50);
     for (var i = 0; i < numOfEntities; i++) {
         var entity = new Entity();
         entities.push(entity);
@@ -24,6 +34,8 @@ function draw() {
     drawFrame();
 }
 function processFrame() {
+    actualFrameCount += 1;
+    days = floor(actualFrameCount / framesPerDay);
     Food.SpawnFood();
     entities.forEach(function (entity) {
         entity.UpdateMovement();
@@ -36,6 +48,7 @@ function drawFrame() {
     foodList.forEach(function (food) {
         food.Show();
     });
+    div.html("Current Day: " + days);
 }
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
@@ -66,9 +79,11 @@ var Entity = (function () {
         this.VisionRadius = 100;
         this.Velocity = p5.Vector.random2D().mult(this.Speed);
         this.FoodTarget = null;
+        this.Gender = random(Object.values(Gender));
         this.RotationAngle = 45;
         this.NoiseRandomness = 20;
         this.SpawnRandom();
+        this.DayStart = days;
     }
     Entity.prototype.SpawnRandom = function () {
         this.Position = createVector(random(width), random(height));
@@ -94,6 +109,7 @@ var Entity = (function () {
         if (this.FoodTarget != null) {
             console.log(this.FoodTarget.Position.x + ";" + this.FoodTarget.Position.y);
         }
+        this.Age = days - this.DayStart;
         this.Position.add(this.Velocity);
     };
     Entity.prototype.FindFood = function () {
@@ -124,13 +140,19 @@ var Entity = (function () {
         }
     };
     Entity.prototype.Show = function () {
-        var c = color(255, 204, 0);
-        stroke(c);
+        var cMale = color(255, 204, 0);
+        var cFemale = color(255, 51, 204);
+        stroke(color(102, 255, 153));
         strokeWeight(1);
         noFill();
         circle(this.Position.x, this.Position.y, this.VisionRadius * 2);
         strokeWeight(15);
-        stroke(c);
+        if (this.Gender == Gender.Male) {
+            stroke(cMale);
+        }
+        else {
+            stroke(cFemale);
+        }
         point(this.Position.x, this.Position.y);
         strokeWeight(1);
         if (this.FoodTarget != null) {
@@ -140,7 +162,6 @@ var Entity = (function () {
     return Entity;
 }());
 var foodList = [];
-var maxFoodEntities = 50;
 var Food = (function () {
     function Food() {
         this.Consumed = false;
@@ -165,4 +186,9 @@ var Food = (function () {
     };
     return Food;
 }());
+var Gender;
+(function (Gender) {
+    Gender[Gender["Male"] = 0] = "Male";
+    Gender[Gender["Female"] = 1] = "Female";
+})(Gender || (Gender = {}));
 //# sourceMappingURL=app.js.map

@@ -1,24 +1,27 @@
 class Entity {
-    public Position: p5.Vector
+    Position: p5.Vector
     Speed: number = 5;
     VisionRadius: number = 100;
     Velocity: p5.Vector = p5.Vector.random2D().mult(this.Speed);
     FoodTarget: Food = null;
-    RotationAngle : number = 45; // The Entity will turn randomly x degree to the left or right
-    RotationAngleRadian : number; // The above as radian
-    NoiseRandomness : number = 20 // %chance to turn each frame
+    Gender: Gender = random(Object.values(Gender));
+    RotationAngle: number = 45; // The Entity will turn randomly x degree to the left or right
+    RotationAngleRadian: number; // The above as radian
+    NoiseRandomness: number = 20 // %chance to turn each frame
+    Age: number;
+    private DayStart: number;
     constructor() {
         this.SpawnRandom();
+        this.DayStart = days;
     }
 
     private SpawnRandom(): any {
         this.Position = createVector(random(width), random(height));
-        this.RotationAngleRadian = PI/180 * this.RotationAngle;
+        this.RotationAngleRadian = PI / 180 * this.RotationAngle;
     }
 
     public UpdateMovement(): any {
         if (this.FindFood()) {
-
             if (this.Position.equals(this.FoodTarget.Position)) {
                 this.FoodTarget.Consumed = true;
 
@@ -44,6 +47,7 @@ class Entity {
         if (this.FoodTarget != null) {
             console.log(this.FoodTarget.Position.x + ";" + this.FoodTarget.Position.y);
         }
+        this.Age = days - this.DayStart;
         this.Position.add(this.Velocity);
     }
 
@@ -79,16 +83,24 @@ class Entity {
         }
     }
     public Show(): any {
-        let c = color(255, 204, 0);
+        let cMale = color(255, 204, 0);
+        let cFemale = color(255, 51, 204);
+
         // Radius
-        stroke(c);
+        stroke(color(102, 255, 153));
         strokeWeight(1);
         noFill();
         circle(this.Position.x, this.Position.y, this.VisionRadius * 2);
 
         // The entity
         strokeWeight(15);
-        stroke(c);
+
+        if (this.Gender == Gender.Male) {
+            stroke(cMale);
+        }
+        else {
+            stroke(cFemale);
+        }
         point(this.Position.x, this.Position.y);
 
         // Line to food
