@@ -1,9 +1,10 @@
 // GLOBAL VARS & TYPES
-let speed: p5.Element;
-let entities: Entity[] = [];
-let numOfEntities: number = 10;
+let speed : p5.Element;
+let entities : Entity[] = [];
+let numOfEntities : number = 10;
 
-function setup() {
+function setup() 
+{
   console.log("🚀 - Setup initialized - P5 is running");
   // FULLSCREEN CANVAS
   createCanvas(windowWidth - 200, windowHeight);
@@ -18,12 +19,15 @@ function setup() {
   speed.style("width", "160px");
 
   // INITIALISE LIST
-  for (let i = 0; i < numOfEntities; i++) {
+  for (let i = 0; i < numOfEntities; i++) 
+  {
     let entity = new Entity();
     entities.push(entity);
   }
 }
-function draw() {
+
+function draw() 
+{
   // CLEAR BACKGROUND
   background(50);
 

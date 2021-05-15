@@ -11,12 +11,12 @@ class Entity {
         this.SpawnRandom();
     }
 
-    private SpawnRandom(): any {
+    private SpawnRandom() : any {
         this.Position = createVector(random(width), random(height));
         this.RotationAngleRadian = PI/180 * this.RotationAngle;
     }
 
-    public UpdateMovement(): any {
+    public UpdateMovement() : any {
         if (this.FindFood()) {
 
             if (this.Position.equals(this.FoodTarget.Position)) {
@@ -47,7 +47,7 @@ class Entity {
         this.Position.add(this.Velocity);
     }
 
-    private FindFood(): boolean {
+    private FindFood() : boolean {
         // Is currently targeted food sourced consumed by someone else?
         if (this.FoodTarget?.Consumed) {
             this.FoodTarget = null;
@@ -64,7 +64,7 @@ class Entity {
 
         return this.FoodTarget != null;
     }
-    public Wander(): any {
+    public Wander() : any {
         if (NumberHelper.RandomPercentage(this.NoiseRandomness)) {
             this.Velocity = this.Velocity.rotate(random(-this.RotationAngleRadian, this.RotationAngleRadian))
         }
@@ -78,7 +78,7 @@ class Entity {
             this.Velocity.y *= -1;
         }
     }
-    public Show(): any {
+    public Show() : any {
         let c = color(255, 204, 0);
         // Radius
         stroke(c);
