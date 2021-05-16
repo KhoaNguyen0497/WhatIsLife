@@ -4,20 +4,22 @@ let entities: Entity[] = [];
 // Frames & days
 let fps: number = 60; // PC MASTER RACE
 let framesPerDay: number = fps * 5; // A day advances every x seconds or 5x frames
-let days : number = 0;
-let actualFrameCount : number = 0;
+let days: number = 0;
+let actualFrameCount: number = 0;
 
 // Settings
 let speed: p5.Element;
-let sideBarXLocation : number;
+let sideBarXLocation: number;
 let dayTextBox: p5.Element;
 let numOfEntitiesTextBox: p5.Element;
-let visionCheckBox : any;
-let debugCheckBox : any;
+let avgAgeTextBox: p5.Element;
+let visionCheckBox: any;
+let debugCheckBox: any;
 
 // Some random vars. TODO: put these somewhere else
-let isNewDay : boolean = true;
-let newBorn : Entity[] = [];
+let isNewDay: boolean = true;
+let newBorn: Entity[] = [];
+let averageAge: number = 0;
 function setup() {
   console.log("🚀 - Setup initialized - P5 is running");
   // FULLSCREEN CANVAS
@@ -33,7 +35,7 @@ function setup() {
   speed.position(sideBarXLocation, 10);
   speed.style("width", "160px");
 
-  dayTextBox = createDiv("C");
+  dayTextBox = createDiv();
   dayTextBox.position(sideBarXLocation, 50)
 
   visionCheckBox = createCheckbox(' Show vision radius', true);
@@ -42,20 +44,21 @@ function setup() {
   debugCheckBox = createCheckbox(' Show debug info', true);
   debugCheckBox.position(sideBarXLocation, 110);
 
-  numOfEntitiesTextBox = createDiv("C");
+  numOfEntitiesTextBox = createDiv();
   numOfEntitiesTextBox.position(sideBarXLocation, 140)
 
+  avgAgeTextBox = createDiv();
+  avgAgeTextBox.position(sideBarXLocation, 160)
+
   // INITIALISE LIST
-  for (let i = 0; i < Config.MaxEntities; i++) 
-  {
+  for (let i = 0; i < Config.MaxEntities; i++) {
     let entity = new Entity();
     entities.push(entity);
   }
   Food.SpawnFood();
 }
 
-function draw() 
-{
+function draw() {
   // CLEAR BACKGROUND
   background(200);
 
@@ -71,26 +74,28 @@ function draw()
 }
 
 function processFrame() {
-  actualFrameCount+=1;
+  actualFrameCount += 1;
   // Check for day change to trigger certain events
   let tempDay: number = floor(actualFrameCount / framesPerDay);
-  if (tempDay > days){
+  if (tempDay > days) {
     days = tempDay;
     Food.SpawnFood();
     isNewDay = true;
   }
- 
 
+  averageAge = 0;
   entities.forEach(entity => {
     entity.Update();
+    averageAge += entity.Age;
   });
+  entities = entities.filter(e => e.IsAlive);
+  averageAge = averageAge / entities.length;
   entities = entities.concat(newBorn);
   newBorn = [];
 
   // If it's consumed, remove it
-  foodList = foodList.filter((food) =>
-  {
-      return !food.Consumed;
+  foodList = foodList.filter((food) => {
+    return !food.Consumed;
   });
 
   isNewDay = false;
@@ -104,8 +109,10 @@ function drawFrame() {
     food.Show();
   });
 
-  dayTextBox.html("Current Day: " + days);  
-  numOfEntitiesTextBox.html("Number of Entities: " + entities.length) 
+  dayTextBox.html("Current Day: " + days);
+  numOfEntitiesTextBox.html("Number of Entities: " + entities.length)
+  avgAgeTextBox.html("Average Age: " + averageAge)
+  
 }
 
 // p5 WILL AUTO RUN THIS FUNCTION IF THE BROWSER WINDOW SIZE CHANGES

@@ -17,7 +17,7 @@ class Entity {
         return days - this.DayStart;;
     }
     Weight: number = 0;
-
+    IsAlive : boolean = true;
     Hunger: Hunger = new Hunger(this);
     ReproducetiveNeed: ReproductiveNeed = new ReproductiveNeed(this);
     Statuses: Status[] = []; // Temporary statuses that get recalculated every frame
@@ -27,6 +27,14 @@ class Entity {
         this.RotationAngleRadian = PI / 180 * this.RotationAngle;
         this.Spawn(position);
         this.DayStart = days;
+    }
+
+    private Die() : any{
+        // sad
+        if (this.Partner != null){
+            this.Partner.ReproducetiveNeed.Reset();
+        }
+        this.IsAlive = false;
     }
 
     private Spawn(position: p5.Vector): void {
@@ -42,9 +50,16 @@ class Entity {
         let tempStatuses: Status[] = [];
         StatusConditions.forEach((condition: (e: Entity) => boolean, status: Status) => {
             if (condition(this)) {
+                if (status == Status.Death){
+                    this.Die();
+                }
                 tempStatuses.push(status);
             }
         });
+
+        if (!this.IsAlive){
+            return;
+        }
 
         this.Statuses = tempStatuses;
 
