@@ -11,21 +11,21 @@ class Food
         this.SpawnRandom();
     }
 
-    private SpawnRandom() : any 
+    private SpawnRandom() : void 
     {
         this.Position = createVector(random(width), random(height));
     }
     
-    public static SpawnFood() : any
+    public static SpawnFood() : void
     {
-        while (foodList.length < maxFoodEntities)
+        while (foodList.length < Config.MaxFood)
         {
             let food = new Food();
             foodList.push(food);
         }
     }
 
-    public Show() : any
+    public Show() : void
     {
         strokeWeight(15);
         stroke("green");

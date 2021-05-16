@@ -1,7 +1,5 @@
 // Entities and Food
-let maxFoodEntities : number = 50;
 let entities: Entity[] = [];
-let numOfEntities: number = 1;
 
 // Frames & days
 let fps: number = 60; // PC MASTER RACE
@@ -12,8 +10,12 @@ let actualFrameCount : number = 0;
 // Settings
 let speed: p5.Element;
 let sideBarXLocation : number;
-let div: p5.Element;
+let dayTextBox: p5.Element;
+let visionCheckBox : any;
+let debugCheckBox : any;
 
+// Some random vars. TODO: put these somewhere else
+let isNewDay : boolean = true;
 function setup() {
   console.log("🚀 - Setup initialized - P5 is running");
   // FULLSCREEN CANVAS
@@ -24,24 +26,33 @@ function setup() {
   frameRate(60);
   sideBarXLocation = windowWidth - 190;
 
-  // SPEED SLIDER
+  //Sidebar options
   speed = createSlider(0, 10, 0, 0);
   speed.position(sideBarXLocation, 10);
   speed.style("width", "160px");
-  div = createDiv("C");
-  div.position(sideBarXLocation, 50)
+
+  dayTextBox = createDiv("C");
+  dayTextBox.position(sideBarXLocation, 50)
+
+  visionCheckBox = createCheckbox(' Show vision radius', true);
+  visionCheckBox.position(sideBarXLocation, 80);
+
+  debugCheckBox = createCheckbox(' Show debug info', true);
+  debugCheckBox.position(sideBarXLocation, 110);
+
   // INITIALISE LIST
-  for (let i = 0; i < numOfEntities; i++) 
+  for (let i = 0; i < Config.MaxEntities; i++) 
   {
     let entity = new Entity();
     entities.push(entity);
   }
+  Food.SpawnFood();
 }
 
 function draw() 
 {
   // CLEAR BACKGROUND
-  background(50);
+  background(200);
 
   // The purpose of this loop is to preprocess frames before rendering them
   // Another way to do this is to increase the speed of each Entity, but the simulation won't be accurate, though it is more performant
@@ -56,23 +67,25 @@ function draw()
 
 function processFrame() {
   actualFrameCount+=1;
-
   // Check for day change to trigger certain events
   let tempDay: number = floor(actualFrameCount / framesPerDay);
   if (tempDay > days){
     days = tempDay;
     Food.SpawnFood();
+    isNewDay = true;
   }
  
 
   entities.forEach(entity => {
-    entity.UpdateMovement();
+    entity.Update();
   });
+
+  // If it's consumed, remove it
   foodList = foodList.filter((food) =>
   {
       return !food.Consumed;
   });
-
+  isNewDay = false;
 }
 
 function drawFrame() {
@@ -83,7 +96,7 @@ function drawFrame() {
     food.Show();
   });
 
-  div.html("Current Day: " + days);   
+  dayTextBox.html("Current Day: " + days);   
 }
 
 // p5 WILL AUTO RUN THIS FUNCTION IF THE BROWSER WINDOW SIZE CHANGES

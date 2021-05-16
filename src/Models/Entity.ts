@@ -9,27 +9,38 @@ class Entity {
     RotationAngleRadian: number; // The above as radian
     NoiseRandomness: number = 20 // %chance to turn each frame
     Age: number;
-    Weight : number = 0;
+    Weight: number = 0;
+
+    Hunger: Hunger = new Hunger(this);
+    Statuses: Status[] = []; // Temporary statuses that get recalculated every frame
 
     private DayStart: number;
     constructor() {
+        this.RotationAngleRadian = PI / 180 * this.RotationAngle;
         this.SpawnRandom();
         this.DayStart = days;
     }
 
-    private SpawnRandom() : any {
+    private SpawnRandom(): void {
         this.Position = createVector(random(width), random(height));
-        this.RotationAngleRadian = PI / 180 * this.RotationAngle;
     }
 
-    public UpdateMovement() : any {
-        if (this.FindFood()) {
+    public Update(): void {
+        this.Statuses = [];
+        StatusConditions.forEach((condition: (e: Entity) => boolean, status: Status) => {
+            if (condition(this)) {
+                this.Statuses.push(status);
+            }
+        });
+
+        this.Hunger.Update();
+
+        if (this.Statuses.includes(Status.Hungry) && this.FindFood()) {
             if (this.Position.equals(this.FoodTarget.Position)) {
                 this.FoodTarget.Consumed = true;
+                this.FoodTarget = null;
+                this.Hunger.Value += this.Hunger.FoodValue;
                 this.Weight += 1;
-
-                // Reset Velocity
-                this.Velocity.normalize().mult(this.Speed);
             }
             else {
                 // Get Direction to food
@@ -49,9 +60,12 @@ class Entity {
 
         this.Age = days - this.DayStart;
         this.Position.add(this.Velocity);
+
+        // Reset Velocity
+        this.Velocity.normalize().mult(this.Speed);
     }
 
-    private FindFood() : boolean {
+    private FindFood(): boolean {
         // Is currently targeted food sourced consumed by someone else?
         if (this.FoodTarget?.Consumed) {
             this.FoodTarget = null;
@@ -68,7 +82,7 @@ class Entity {
 
         return this.FoodTarget != null;
     }
-    public Wander() : any {
+    public Wander(): void {
         if (NumberHelper.RandomPercentage(this.NoiseRandomness)) {
             this.Velocity = this.Velocity.rotate(random(-this.RotationAngleRadian, this.RotationAngleRadian))
         }
@@ -82,29 +96,46 @@ class Entity {
             this.Velocity.y *= -1;
         }
     }
-    public Show(): any {
+    public Show(): void {
         let cMale = color(255, 204, 0);
         let cFemale = color(255, 51, 204);
+        let cHungry = color(255, 0, 0);
         if (this.Gender == Gender.Male) {
             stroke(cMale);
         }
         else {
             stroke(cFemale);
         }
-        
+
+        if (this.Statuses.includes(Status.Hungry)) {
+            stroke(cHungry);
+        }
         // Radius
-        strokeWeight(1);
-        noFill();
-        circle(this.Position.x, this.Position.y, this.VisionRadius * 2);
+        if (visionCheckBox.checked()) {
+            strokeWeight(1);
+            noFill();
+            circle(this.Position.x, this.Position.y, this.VisionRadius * 2);
+        }
+
 
         // The entity
-        strokeWeight(this.Weight + 10);
+        strokeWeight(Config.EnableWeightVisual ? this.Weight + 10 : 20);
         point(this.Position.x, this.Position.y);
 
         // Line to food
         strokeWeight(1);
         if (this.FoodTarget != null) {
             line(this.Position.x, this.Position.y, this.FoodTarget.Position.x, this.FoodTarget.Position.y);
+        }
+
+        // Debug info
+        if (debugCheckBox.checked()) {
+            color('black');
+            fill('black')
+            textSize(18);
+            stroke('black')
+            text('Age: ' + this.Age, this.Position.x - 10, this.Position.y - 15);
+            text('Hunger: ' + this.Hunger.Value, this.Position.x - 10, this.Position.y - 35);
         }
     }
 }
