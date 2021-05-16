@@ -11,11 +11,13 @@ let actualFrameCount : number = 0;
 let speed: p5.Element;
 let sideBarXLocation : number;
 let dayTextBox: p5.Element;
+let numOfEntitiesTextBox: p5.Element;
 let visionCheckBox : any;
 let debugCheckBox : any;
 
 // Some random vars. TODO: put these somewhere else
 let isNewDay : boolean = true;
+let newBorn : Entity[] = [];
 function setup() {
   console.log("🚀 - Setup initialized - P5 is running");
   // FULLSCREEN CANVAS
@@ -39,6 +41,9 @@ function setup() {
 
   debugCheckBox = createCheckbox(' Show debug info', true);
   debugCheckBox.position(sideBarXLocation, 110);
+
+  numOfEntitiesTextBox = createDiv("C");
+  numOfEntitiesTextBox.position(sideBarXLocation, 140)
 
   // INITIALISE LIST
   for (let i = 0; i < Config.MaxEntities; i++) 
@@ -79,12 +84,15 @@ function processFrame() {
   entities.forEach(entity => {
     entity.Update();
   });
+  entities = entities.concat(newBorn);
+  newBorn = [];
 
   // If it's consumed, remove it
   foodList = foodList.filter((food) =>
   {
       return !food.Consumed;
   });
+
   isNewDay = false;
 }
 
@@ -96,7 +104,8 @@ function drawFrame() {
     food.Show();
   });
 
-  dayTextBox.html("Current Day: " + days);   
+  dayTextBox.html("Current Day: " + days);  
+  numOfEntitiesTextBox.html("Number of Entities: " + entities.length) 
 }
 
 // p5 WILL AUTO RUN THIS FUNCTION IF THE BROWSER WINDOW SIZE CHANGES
