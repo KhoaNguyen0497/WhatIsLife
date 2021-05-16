@@ -1,5 +1,5 @@
 # WhatIsLife
-Natural Selection Simulation
+Natural Selection Simulation, heavily inspired by https://www.youtube.com/watch?v=0ZGbIKd0XrM
 
 ![demo](demo.gif)
 
