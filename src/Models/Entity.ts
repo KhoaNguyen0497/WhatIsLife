@@ -181,16 +181,11 @@ class Entity {
     public Show(): void {
         let cMale = color(255, 204, 0);
         let cFemale = color(255, 51, 204);
-        let cHungry = color(255, 0, 0);
         if (this.Gender == Gender.Male) {
             stroke(cMale);
         }
         else {
             stroke(cFemale);
-        }
-
-        if (this.Statuses.includes(Status.Hungry)) {
-            stroke(cHungry);
         }
         // Radius
         if (visionCheckBox.checked()) {

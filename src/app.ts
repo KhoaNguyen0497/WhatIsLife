@@ -31,17 +31,17 @@ function setup() {
   sideBarXLocation = windowWidth - 190;
 
   //Sidebar options
-  speed = createSlider(0, 10, 0, 0);
+  speed = createSlider(0, 10, 1, 0);
   speed.position(sideBarXLocation, 10);
   speed.style("width", "160px");
 
   dayTextBox = createDiv();
   dayTextBox.position(sideBarXLocation, 50)
 
-  visionCheckBox = createCheckbox(' Show vision radius', true);
+  visionCheckBox = createCheckbox(' Show vision radius', false);
   visionCheckBox.position(sideBarXLocation, 80);
 
-  debugCheckBox = createCheckbox(' Show debug info', true);
+  debugCheckBox = createCheckbox(' Show debug info', false);
   debugCheckBox.position(sideBarXLocation, 110);
 
   numOfEntitiesTextBox = createDiv();
@@ -64,6 +64,9 @@ function draw() {
 
   // The purpose of this loop is to preprocess frames before rendering them
   // Another way to do this is to increase the speed of each Entity, but the simulation won't be accurate, though it is more performant
+  if (<number>speed.value() == 0){
+    return;
+  }
   let i: number = 0;
   while (i <= <number>speed.value()) {
     processFrame();
