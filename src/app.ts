@@ -64,14 +64,12 @@ function draw() {
 
   // The purpose of this loop is to preprocess frames before rendering them
   // Another way to do this is to increase the speed of each Entity, but the simulation won't be accurate, though it is more performant
-  if (<number>speed.value() == 0){
-    return;
-  }
   let i: number = 0;
-  while (i <= <number>speed.value()) {
+  while (i < <number>speed.value()) {
     processFrame();
     i++;
   }
+
 
   drawFrame();
 }
@@ -115,7 +113,7 @@ function drawFrame() {
   dayTextBox.html("Current Day: " + days);
   numOfEntitiesTextBox.html("Number of Entities: " + entities.length)
   avgAgeTextBox.html("Average Age: " + averageAge)
-  
+
 }
 
 // p5 WILL AUTO RUN THIS FUNCTION IF THE BROWSER WINDOW SIZE CHANGES
