@@ -3,25 +3,30 @@ class Entity {
     Position: p5.Vector;
     Velocity: p5.Vector;
 
-    // Attributes
+    // Movement behaviour attributes
+    RotationAngle: number = 45; // The Entity will turn randomly x degree to the left or right
+    RotationAngleRadian: number; // The above as radian
+    NoiseRandomness: number = 20 // %chance to turn each frame
+
+    // Other attributes
     Speed: number = 5;
     VisionRadius: number = 150;
-
+    Gender: Gender = random(Object.values(Gender));
+    Weight: number = 0;
+    IsAlive : boolean = true;
+    get Age(): number {
+        return days - this.DayStart;;
+    }
+    
     // Targets for different purposes
     FoodTarget: Food = null;
     Partner: Entity = null;
 
-    Gender: Gender = random(Object.values(Gender));
-    RotationAngle: number = 45; // The Entity will turn randomly x degree to the left or right
-    RotationAngleRadian: number; // The above as radian
-    NoiseRandomness: number = 20 // %chance to turn each frame
-    get Age(): number {
-        return days - this.DayStart;;
-    }
-    Weight: number = 0;
-    IsAlive : boolean = true;
+    // Survival Mechanics
     Hunger: Hunger = new Hunger(this);
     ReproductiveFunction: ReproductiveFunction = new ReproductiveFunction(this);
+
+    // Traits and Statuses
     Statuses: Status[] = []; // Temporary statuses that get recalculated every frame
     
     private DayStart: number;
@@ -51,6 +56,7 @@ class Entity {
 
     public Update(): void {     
         let tempStatuses: Status[] = [];
+
         StatusConditions.forEach((condition: (e: Entity) => boolean, status: Status) => {
             if (condition(this)) {
                 if (status == Status.Death){

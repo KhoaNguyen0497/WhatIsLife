@@ -1,12 +1,7 @@
-enum Status {
-    Hungry,
-    UrgeToReproduce,
-    Death
-}
+/// <reference path="Status.ts" />
+
 
 let StatusConditions : Map<Status, (e: Entity) => boolean> = new Map<Status, (e: Entity) => boolean>();
-
-
 // Statuses are checked every frame
 StatusConditions.set(Status.Hungry, (e: Entity) => {
     return e.Hunger.Value <= e.Hunger.HungryThreshold
@@ -46,5 +41,4 @@ StatusConditions.set(Status.Death, (e: Entity) => {
     }
 
     return false;
-
 });

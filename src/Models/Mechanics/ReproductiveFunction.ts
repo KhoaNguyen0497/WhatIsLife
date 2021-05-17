@@ -9,7 +9,7 @@ class ReproductiveFunction {
     }
     Update(): void {
         // for legal reasons, should only reproduce after 18
-        if (this.Entity.Age > 5 && isNewDay) {
+        if (this.Entity.Age > 18 && isNewDay) {
             this.Value += this.Rate
         }
     }
