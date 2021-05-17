@@ -1,13 +1,15 @@
 class Entity {
-    Position: p5.Vector
+    // Vectors
+    Position: p5.Vector;
+    Velocity: p5.Vector;
+
+    // Attributes
     Speed: number = 5;
     VisionRadius: number = 150;
-    Velocity: p5.Vector = p5.Vector.random2D().mult(this.Speed);
 
     // Targets for different purposes
     FoodTarget: Food = null;
     Partner: Entity = null;
-
 
     Gender: Gender = random(Object.values(Gender));
     RotationAngle: number = 45; // The Entity will turn randomly x degree to the left or right
@@ -19,11 +21,12 @@ class Entity {
     Weight: number = 0;
     IsAlive : boolean = true;
     Hunger: Hunger = new Hunger(this);
-    ReproducetiveNeed: ReproductiveNeed = new ReproductiveNeed(this);
+    ReproductiveFunction: ReproductiveFunction = new ReproductiveFunction(this);
     Statuses: Status[] = []; // Temporary statuses that get recalculated every frame
-
+    
     private DayStart: number;
     constructor(position?: p5.Vector) {
+        this.Velocity = p5.Vector.random2D().mult(this.Speed);;
         this.RotationAngleRadian = PI / 180 * this.RotationAngle;
         this.Spawn(position);
         this.DayStart = days;
@@ -32,7 +35,7 @@ class Entity {
     private Die() : any{
         // sad
         if (this.Partner != null){
-            this.Partner.ReproducetiveNeed.Reset();
+            this.Partner.ReproductiveFunction.Reset();
         }
         this.IsAlive = false;
     }
@@ -64,7 +67,7 @@ class Entity {
         this.Statuses = tempStatuses;
 
         this.Hunger.Update();
-        this.ReproducetiveNeed.Update();
+        this.ReproductiveFunction.Update();
 
         if (this.FindFood()) {
             this.GetFood();
@@ -148,8 +151,8 @@ class Entity {
             let child: Entity = new Entity(this.Position);
             newBorn.push(child);
 
-            this.Partner.ReproducetiveNeed.Reset();
-            this.ReproducetiveNeed.Reset();
+            this.Partner.ReproductiveFunction.Reset();
+            this.ReproductiveFunction.Reset();
             this.Partner = null;
         }
         else {

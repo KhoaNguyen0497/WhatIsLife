@@ -14,12 +14,12 @@ StatusConditions.set(Status.Hungry, (e: Entity) => {
 
 StatusConditions.set(Status.UrgeToReproduce, (e: Entity) => {
     // Recently reproduced
-    if (e.ReproducetiveNeed.Value < 0 ){
+    if (e.ReproductiveFunction.Value < 0 ){
         return false;
     }
     // Update once a day only and have a higher chance of having an urge to reproduce the longer the entity goes without reproducing
     if (isNewDay && !e.Statuses.includes(Status.UrgeToReproduce)){
-        return NumberHelper.RandomPercentage(e.ReproducetiveNeed.Value);
+        return NumberHelper.RandomPercentage(e.ReproductiveFunction.Value);
     }
 
     return e.Statuses.includes(Status.UrgeToReproduce);
