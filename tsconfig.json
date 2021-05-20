@@ -1,14 +1,16 @@
 {
-    "compilerOptions": {
-      "mapRoot": "bin",
-      "module": "none",
-      "noImplicitAny": true,
-      "outFile": "./bin/app.js",
-      "preserveConstEnums": true,
-      "removeComments": true,
-      "rootDir": "",
-      "sourceMap": true,
-      "target": "es6",
-      "lib": ["es2017", "dom"]
-    }
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "target": "es5",
+    "module": "esnext",
+    "lib": ["DOM", "ESNext"],
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "baseUrl": "./src",
+    "paths": {
+      "~/*": ["./*"]
+    },
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   }
+}

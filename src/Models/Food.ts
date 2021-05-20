@@ -1,7 +1,9 @@
+import { Config } from "../Config";
+
 let foodList : Food[] = [];
 
 
-class Food
+export class Food
 {
     public Position : p5.Vector
     public Consumed : boolean = false;

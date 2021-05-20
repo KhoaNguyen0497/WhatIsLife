@@ -1,8 +1,11 @@
-class Entity {
-    // Vectors
-    Position: p5.Vector;
-    Velocity: p5.Vector;
+import * as p5 from "p5";
+import { entities, newBorn } from "../app";
+import { Config } from "../Config";
 
+export class Entity {
+    // Vectors
+    Position: p5.Vector = createVector();
+    Velocity: p5.Vector;
     // Movement behaviour attributes
     RotationAngle: number = 45; // The Entity will turn randomly x degree to the left or right
     RotationAngleRadian: number; // The above as radian
@@ -11,36 +14,36 @@ class Entity {
     // Other attributes
     Speed: number = 5;
     VisionRadius: number = 150;
-    Gender: Gender = random(Object.values(Gender));
+    // Gender: Gender = random(Object.values(Gender));
     Weight: number = 0;
     IsAlive : boolean = true;
     get Age(): number {
-        return days - this.DayStart;;
+        return 1 - this.DayStart;;
     }
     
     // Targets for different purposes
-    FoodTarget: Food = null;
+    //FoodTarget: Food = null;
     Partner: Entity = null;
 
     // Survival Mechanics
-    Hunger: Hunger = new Hunger(this);
-    ReproductiveFunction: ReproductiveFunction = new ReproductiveFunction(this);
+    // Hunger: Hunger = new Hunger(this);
+    // ReproductiveFunction: ReproductiveFunction = new ReproductiveFunction(this);
 
     // Traits and Statuses
-    Statuses: Status[] = []; // Temporary statuses that get recalculated every frame
+    // Statuses: Status[] = []; // Temporary statuses that get recalculated every frame
     
     private DayStart: number;
     constructor(position?: p5.Vector) {
         this.Velocity = p5.Vector.random2D().mult(this.Speed);;
         this.RotationAngleRadian = PI / 180 * this.RotationAngle;
         this.Spawn(position);
-        this.DayStart = days;
+        this.DayStart = 1;
     }
 
     private Die() : any{
         // sad
         if (this.Partner != null){
-            this.Partner.ReproductiveFunction.Reset();
+            // this.Partner.ReproductiveFunction.Reset();
         }
         this.IsAlive = false;
     }
@@ -55,153 +58,153 @@ class Entity {
     }
 
     public Update(): void {     
-        let tempStatuses: Status[] = [];
+        // let tempStatuses: Status[] = [];
 
-        StatusConditions.forEach((condition: (e: Entity) => boolean, status: Status) => {
-            if (condition(this)) {
-                if (status == Status.Death){
-                    this.Die();
-                }
-                tempStatuses.push(status);
-            }
-        });
+        // StatusConditions.forEach((condition: (e: Entity) => boolean, status: Status) => {
+        //     if (condition(this)) {
+        //         if (status == Status.Death){
+        //             this.Die();
+        //         }
+        //         tempStatuses.push(status);
+        //     }
+        // });
 
-        if (!this.IsAlive){
-            return;
-        }
+        // if (!this.IsAlive){
+        //     return;
+        // }
 
-        this.Statuses = tempStatuses;
+        // this.Statuses = tempStatuses;
 
-        this.Hunger.Update();
-        this.ReproductiveFunction.Update();
+        // this.Hunger.Update();
+        // this.ReproductiveFunction.Update();
 
-        if (this.FindFood()) {
-            this.GetFood();
-        }
-        else if (this.FindPartner()) {
-            this.MoveToPartner();
-        }
-        else {
-            this.Wander();
-        }
+        // if (this.FindFood()) {
+        //     this.GetFood();
+        // }
+        // else if (this.FindPartner()) {
+        //     this.MoveToPartner();
+        // }
+        // else {
+        //     this.Wander();
+        // }
 
-        this.Position.add(this.Velocity);
+        // this.Position.add(this.Velocity);
 
-        // Reset Velocity
-        this.Velocity.normalize().mult(this.Speed);
+        // // Reset Velocity
+        // this.Velocity.normalize().mult(this.Speed);
     }
 
     private GetFood(): any {
-        if (this.Position.equals(this.FoodTarget.Position)) {
-            this.FoodTarget.Consumed = true;
-            this.FoodTarget = null;
-            this.Hunger.Value += this.Hunger.FoodValue;
-            this.Weight += 1;
-        }
-        else {
-            // Get Direction to food
-            let directionToFood: p5.Vector = createVector();
-            directionToFood.x = this.FoodTarget.Position.x - this.Position.x;
-            directionToFood.y = this.FoodTarget.Position.y - this.Position.y;
+        // if (this.Position.equals(this.FoodTarget.Position)) {
+        //     this.FoodTarget.Consumed = true;
+        //     this.FoodTarget = null;
+        //     this.Hunger.Value += this.Hunger.FoodValue;
+        //     this.Weight += 1;
+        // }
+        // else {
+        //     // Get Direction to food
+        //     let directionToFood: p5.Vector = createVector();
+        //     directionToFood.x = this.FoodTarget.Position.x - this.Position.x;
+        //     directionToFood.y = this.FoodTarget.Position.y - this.Position.y;
 
-            this.Velocity = directionToFood;
-            // Limit the max distance we can move
-            this.Velocity.limit(min(directionToFood.mag(), this.Speed));
-        }
+        //     this.Velocity = directionToFood;
+        //     // Limit the max distance we can move
+        //     this.Velocity.limit(min(directionToFood.mag(), this.Speed));
+        // }
     }
 
-    private FindFood(): boolean {
-        if (!this.Statuses.includes(Status.Hungry)) {
-            return false;
-        }
+    // private FindFood(): boolean {
+    //     if (!this.Statuses.includes(Status.Hungry)) {
+    //         return false;
+    //     }
 
-        // Is currently targeted food sourced consumed by someone else?
-        if (this.FoodTarget?.Consumed) {
-            this.FoodTarget = null;
-        }
-        // Find a new one
-        else {
-            for (let food of foodList) {
-                if (VectorHelper.Distance(this.Position, food.Position) <= this.VisionRadius) {
-                    this.FoodTarget = food;
-                    break;
-                }
-            }
-        }
+    //     // Is currently targeted food sourced consumed by someone else?
+    //     if (this.FoodTarget?.Consumed) {
+    //         this.FoodTarget = null;
+    //     }
+    //     // Find a new one
+    //     else {
+    //         for (let food of foodList) {
+    //             if (VectorHelper.Distance(this.Position, food.Position) <= this.VisionRadius) {
+    //                 this.FoodTarget = food;
+    //                 break;
+    //             }
+    //         }
+    //     }
 
-        return this.FoodTarget != null;
-    }
+    //     return this.FoodTarget != null;
+    // }
 
-    private FindPartner(): boolean {
-        if (!this.Statuses.includes(Status.UrgeToReproduce)) {
-            return false;
-        }
+    // private FindPartner(): boolean {
+    //     if (!this.Statuses.includes(Status.UrgeToReproduce)) {
+    //         return false;
+    //     }
 
-        if (this.Partner == null){
-            for (let candidate of entities) {
-                let condition: boolean = candidate.Gender != this.Gender && candidate.Statuses.includes(Status.UrgeToReproduce) && VectorHelper.Distance(this.Position, candidate.Position) <= this.VisionRadius + candidate.VisionRadius;
-                if (condition) {
-                    this.Partner = candidate;
-                    candidate.Partner = this;
-                    return true;
-                }
-            }
-        }
+    //     if (this.Partner == null){
+    //         for (let candidate of entities) {
+    //             let condition: boolean = candidate.Gender != this.Gender && candidate.Statuses.includes(Status.UrgeToReproduce) && VectorHelper.Distance(this.Position, candidate.Position) <= this.VisionRadius + candidate.VisionRadius;
+    //             if (condition) {
+    //                 this.Partner = candidate;
+    //                 candidate.Partner = this;
+    //                 return true;
+    //             }
+    //         }
+    //     }
 
-        return this.Partner != null;
-    }
+    //     return this.Partner != null;
+    // }
 
-    private MoveToPartner(): any {
-        if (this.Position.equals(this.Partner.Position)) {
-            // Reproduce
-            let child: Entity = new Entity(this.Position);
-            newBorn.push(child);
+    // private MoveToPartner(): any {
+    //     if (this.Position.equals(this.Partner.Position)) {
+    //         // Reproduce
+    //         let child: Entity = new Entity(this.Position);
+    //         newBorn.push(child);
 
-            this.Partner.ReproductiveFunction.Reset();
-            this.ReproductiveFunction.Reset();
-            this.Partner = null;
-        }
-        else {
-            // Move to Partner
-            let directtionToTarget: p5.Vector = createVector();
-            directtionToTarget.x = this.Partner.Position.x - this.Position.x;
-            directtionToTarget.y = this.Partner.Position.y - this.Position.y;
+    //         this.Partner.ReproductiveFunction.Reset();
+    //         this.ReproductiveFunction.Reset();
+    //         this.Partner = null;
+    //     }
+    //     else {
+    //         // Move to Partner
+    //         let directtionToTarget: p5.Vector = createVector();
+    //         directtionToTarget.x = this.Partner.Position.x - this.Position.x;
+    //         directtionToTarget.y = this.Partner.Position.y - this.Position.y;
 
-            this.Velocity = directtionToTarget;
-            // Limit the max distance we can move
-            this.Velocity.limit(min(directtionToTarget.mag(), this.Speed));
-        }
-    }
+    //         this.Velocity = directtionToTarget;
+    //         // Limit the max distance we can move
+    //         this.Velocity.limit(min(directtionToTarget.mag(), this.Speed));
+    //     }
+    // }
 
-    public Wander(): void {
-        if (NumberHelper.RandomPercentage(this.NoiseRandomness)) {
-            this.Velocity = this.Velocity.rotate(random(-this.RotationAngleRadian, this.RotationAngleRadian))
-        }
+    // public Wander(): void {
+    //     if (NumberHelper.RandomPercentage(this.NoiseRandomness)) {
+    //         this.Velocity = this.Velocity.rotate(random(-this.RotationAngleRadian, this.RotationAngleRadian))
+    //     }
 
-        // If it goes out of bound, +180degree to the angle
-        if (this.Position.x + this.Velocity.x >= width || this.Position.x + this.Velocity.x <= 0) {
-            this.Velocity.x *= -1;
-        }
+    //     // If it goes out of bound, +180degree to the angle
+    //     if (this.Position.x + this.Velocity.x >= width || this.Position.x + this.Velocity.x <= 0) {
+    //         this.Velocity.x *= -1;
+    //     }
 
-        if (this.Position.y + this.Velocity.y >= height || this.Position.y + this.Velocity.y <= 0) {
-            this.Velocity.y *= -1;
-        }
-    }
+    //     if (this.Position.y + this.Velocity.y >= height || this.Position.y + this.Velocity.y <= 0) {
+    //         this.Velocity.y *= -1;
+    //     }
+    // }
     public Show(): void {
         let cMale = color(255, 204, 0);
         let cFemale = color(255, 51, 204);
-        if (this.Gender == Gender.Male) {
-            stroke(cMale);
-        }
-        else {
-            stroke(cFemale);
-        }
-        // Radius
-        if (visionCheckBox.checked()) {
-            strokeWeight(1);
-            noFill();
-            circle(this.Position.x, this.Position.y, this.VisionRadius * 2);
-        }
+        // if (this.Gender == Gender.Male) {
+        //     stroke(cMale);
+        // }
+        // else {
+        //     stroke(cFemale);
+        // }
+        // // Radius
+        // if (visionCheckBox.checked()) {
+        //     strokeWeight(1);
+        //     noFill();
+        //     circle(this.Position.x, this.Position.y, this.VisionRadius * 2);
+        // }
 
 
         // The entity
@@ -210,19 +213,19 @@ class Entity {
 
         // Line to food
         strokeWeight(1);
-        if (this.FoodTarget != null) {
-            line(this.Position.x, this.Position.y, this.FoodTarget.Position.x, this.FoodTarget.Position.y);
-        }
+        // if (this.FoodTarget != null) {
+        //     line(this.Position.x, this.Position.y, this.FoodTarget.Position.x, this.FoodTarget.Position.y);
+        // }
 
         // Debug info
-        if (debugCheckBox.checked()) {
-            color('black');
-            fill('black')
-            textSize(18);
-            stroke('black')
-            text('Age: ' + this.Age, this.Position.x - 10, this.Position.y - 15);
-            text('Hunger: ' + this.Hunger.Value, this.Position.x - 10, this.Position.y - 35);
-            text('ReproductionNeed: ' + this.Statuses.includes(Status.UrgeToReproduce) + " (Partner:" + this.Partner + ")", this.Position.x - 10, this.Position.y - 50);
-        }
+        // if (debugCheckBox.checked()) {
+        //     color('black');
+        //     fill('black')
+        //     textSize(18);
+        //     stroke('black')
+        //     text('Age: ' + this.Age, this.Position.x - 10, this.Position.y - 15);
+        //     text('Hunger: ' + this.Hunger.Value, this.Position.x - 10, this.Position.y - 35);
+        //     text('ReproductionNeed: ' + this.Statuses.includes(Status.UrgeToReproduce) + " (Partner:" + this.Partner + ")", this.Position.x - 10, this.Position.y - 50);
+        // }
     }
 }

@@ -1,5 +1,10 @@
+import { Entity } from "./Models/Entity";
+import { Config } from "./Config";
+import { Food } from "./Models/Food";
+
+
 // Entities and Food
-let entities: Entity[] = [];
+export let entities: Entity[] = [];
 
 // Frames & days
 let fps: number = 60; // PC MASTER RACE
@@ -18,7 +23,7 @@ let debugCheckBox: any;
 
 // Some random vars. TODO: put these somewhere else
 let isNewDay: boolean = true;
-let newBorn: Entity[] = [];
+export let newBorn: Entity[] = [];
 let averageAge: number = 0;
 function setup() {
   console.log("🚀 - Setup initialized - P5 is running");
@@ -34,7 +39,7 @@ function setup() {
   speed = createSlider(0, 20, 1, 0);
   speed.position(sideBarXLocation, 10);
   speed.style("width", "160px");
-
+  let a = new Food();
   dayTextBox = createDiv();
   dayTextBox.position(sideBarXLocation, 50)
 
@@ -49,7 +54,7 @@ function setup() {
 
   avgAgeTextBox = createDiv();
   avgAgeTextBox.position(sideBarXLocation, 160)
-
+console.log(Config.DisableDeath);
   // INITIALISE LIST
   for (let i = 0; i < Config.MaxEntities; i++) {
     let entity = new Entity();
@@ -62,59 +67,59 @@ function draw() {
   // CLEAR BACKGROUND
   background(200);
 
-  // The purpose of this loop is to preprocess frames before rendering them
-  // Another way to do this is to increase the speed of each Entity, but the simulation won't be accurate, though it is more performant
-  let i: number = 0;
-  while (i < <number>speed.value()) {
-    processFrame();
-    i++;
-  }
+  // // The purpose of this loop is to preprocess frames before rendering them
+  // // Another way to do this is to increase the speed of each Entity, but the simulation won't be accurate, though it is more performant
+  // let i: number = 0;
+  // while (i < <number>speed.value()) {
+  //   processFrame();
+  //   i++;
+  // }
 
 
-  drawFrame();
+  // drawFrame();
 }
 
-function processFrame() {
-  actualFrameCount += 1;
-  // Check for day change to trigger certain events
-  let tempDay: number = floor(actualFrameCount / framesPerDay);
-  if (tempDay > days) {
-    days = tempDay;
-    Food.SpawnFood();
-    isNewDay = true;
-  }
+// function processFrame() {
+//   actualFrameCount += 1;
+//   // Check for day change to trigger certain events
+//   let tempDay: number = floor(actualFrameCount / framesPerDay);
+//   if (tempDay > days) {
+//     days = tempDay;
+//     Food.SpawnFood();
+//     isNewDay = true;
+//   }
 
-  averageAge = 0;
-  entities.forEach(entity => {
-    entity.Update();
-    averageAge += entity.Age;
-  });
-  entities = entities.filter(e => e.IsAlive);
-  averageAge = averageAge / entities.length;
-  entities = entities.concat(newBorn);
-  newBorn = [];
+//   averageAge = 0;
+//   entities.forEach(entity => {
+//     entity.Update();
+//     averageAge += entity.Age;
+//   });
+//   entities = entities.filter(e => e.IsAlive);
+//   averageAge = averageAge / entities.length;
+//   entities = entities.concat(newBorn);
+//   newBorn = [];
 
-  // If it's consumed, remove it
-  foodList = foodList.filter((food) => {
-    return !food.Consumed;
-  });
+//   // If it's consumed, remove it
+//   foodList = foodList.filter((food) => {
+//     return !food.Consumed;
+//   });
 
-  isNewDay = false;
-}
+//   isNewDay = false;
+// }
 
-function drawFrame() {
-  entities.forEach(entity => {
-    entity.Show();
-  });
-  foodList.forEach(food => {
-    food.Show();
-  });
+// function drawFrame() {
+//   entities.forEach(entity => {
+//     entity.Show();
+//   });
+//   foodList.forEach(food => {
+//     food.Show();
+//   });
 
-  dayTextBox.html("Current Day: " + days);
-  numOfEntitiesTextBox.html("Number of Entities: " + entities.length)
-  avgAgeTextBox.html("Average Age: " + averageAge)
+//   dayTextBox.html("Current Day: " + days);
+//   numOfEntitiesTextBox.html("Number of Entities: " + entities.length)
+//   avgAgeTextBox.html("Average Age: " + averageAge)
 
-}
+// }
 
 // p5 WILL AUTO RUN THIS FUNCTION IF THE BROWSER WINDOW SIZE CHANGES
 function windowResized() {
