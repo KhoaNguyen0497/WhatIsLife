@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "run-p start-compile start-run",
-    "prestart" : "tsc",
+    "prestart": "tsc",
     "start-compile": "tsc --watch",
     "start-run": "browser-sync start --server -w"
   },
@@ -15,6 +15,6 @@
     "@types/p5": "^0.9.0",
     "browser-sync": "^2.26.12",
     "npm-run-all": "^4.1.5",
-    "typescript": "^3.8.3"
+    "typescript": "^4.3.1-rc"
   }
 }
