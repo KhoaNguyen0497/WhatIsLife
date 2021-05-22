@@ -1,7 +1,8 @@
 import { Entity } from "./Models/Entity";
 import { Config } from "./Config";
 import { Food } from "./Models/Food";
-
+import p5 from "p5";
+import * as p5Global from 'p5/global' 
 
 // Entities and Food
 export let entities: Entity[] = [];
@@ -54,7 +55,7 @@ function setup() {
 
   avgAgeTextBox = createDiv();
   avgAgeTextBox.position(sideBarXLocation, 160)
-console.log(Config.DisableDeath);
+  console.log(Config.DisableDeath);
   // INITIALISE LIST
   for (let i = 0; i < Config.MaxEntities; i++) {
     let entity = new Entity();
@@ -67,57 +68,8 @@ function draw() {
   // CLEAR BACKGROUND
   background(200);
 
-  // // The purpose of this loop is to preprocess frames before rendering them
-  // // Another way to do this is to increase the speed of each Entity, but the simulation won't be accurate, though it is more performant
-  // let i: number = 0;
-  // while (i < <number>speed.value()) {
-  //   processFrame();
-  //   i++;
-  // }
-
-
-  // drawFrame();
 }
 
-// function processFrame() {
-//   actualFrameCount += 1;
-//   // Check for day change to trigger certain events
-//   let tempDay: number = floor(actualFrameCount / framesPerDay);
-//   if (tempDay > days) {
-//     days = tempDay;
-//     Food.SpawnFood();
-//     isNewDay = true;
-//   }
-
-//   averageAge = 0;
-//   entities.forEach(entity => {
-//     entity.Update();
-//     averageAge += entity.Age;
-//   });
-//   entities = entities.filter(e => e.IsAlive);
-//   averageAge = averageAge / entities.length;
-//   entities = entities.concat(newBorn);
-//   newBorn = [];
-
-//   // If it's consumed, remove it
-//   foodList = foodList.filter((food) => {
-//     return !food.Consumed;
-//   });
-
-//   isNewDay = false;
-// }
-
-// function drawFrame() {
-//   entities.forEach(entity => {
-//     entity.Show();
-//   });
-//   foodList.forEach(food => {
-//     food.Show();
-//   });
-
-//   dayTextBox.html("Current Day: " + days);
-//   numOfEntitiesTextBox.html("Number of Entities: " + entities.length)
-//   avgAgeTextBox.html("Average Age: " + averageAge)
 
 // }
 
@@ -125,3 +77,5 @@ function draw() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
+
+console.log('123')
