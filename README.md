@@ -13,7 +13,21 @@ npm start
 # To do
 - Better wandering algorithm
 - Add traits/personalities
-- Add Hunger/Stamina system
+- Add Hunger/Stamina/Reproduction system
 - Add temporary statuses (e.g. Hungry, Energized)
 - Add logging
 - Graphs
+- Genetics
+# Traits:
+- Speed
+- Energy Consumption
+- Food Consumption
+- Eye Sight
+- Gender-specific traits?
+
+# Might do?
+- A predator system?
+- Murderous traits???
+- Entities interacting with each other
+
+
