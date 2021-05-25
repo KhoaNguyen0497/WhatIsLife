@@ -1,3 +1,4 @@
+
 class Entity {
     // Vectors
     Position: p5.Vector;
@@ -9,15 +10,15 @@ class Entity {
     NoiseRandomness: number = 20 // %chance to turn each frame
 
     // Other attributes
-    Speed: number = 5;
+    Speed: number = Config.BaseSpeed;
     VisionRadius: number = 150;
     Gender: Gender = random(Object.values(Gender));
     Weight: number = 0;
-    IsAlive : boolean = true;
+    IsAlive: boolean = true;
     get Age(): number {
         return days - this.DayStart;;
     }
-    
+
     // Targets for different purposes
     FoodTarget: Food = null;
     Partner: Entity = null;
@@ -28,7 +29,8 @@ class Entity {
 
     // Traits and Statuses
     Statuses: Status[] = []; // Temporary statuses that get recalculated every frame
-    
+    Traits: Trait[] = [];
+
     private DayStart: number;
     constructor(position?: p5.Vector) {
         this.Velocity = p5.Vector.random2D().mult(this.Speed);;
@@ -37,36 +39,40 @@ class Entity {
         this.DayStart = days;
     }
 
-    private Die() : any{
+    private Die(): void {
         // sad
-        if (this.Partner != null){
+        if (this.Partner != null) {
             this.Partner.ReproductiveFunction.Reset();
         }
         this.IsAlive = false;
     }
 
+    // If position is not provided, this is a new Entity from the first generation (start of app)
     private Spawn(position: p5.Vector): void {
         if (position) {
             this.Position = createVector(position.x, position.y);
         }
         else {
+            // Add a bunch of traits to the first generation. Remove any line to get rid of that trait for the entire simulation
+            // For the 1st generation, no mutation happens and therefore no mods are applied
+            this.Traits.push(new SpeedMod());
             this.Position = createVector(random(width), random(height));
         }
     }
 
-    public Update(): void {     
+    public Update(): void {
         let tempStatuses: Status[] = [];
 
         StatusConditions.forEach((condition: (e: Entity) => boolean, status: Status) => {
             if (condition(this)) {
-                if (status == Status.Death){
+                if (status == Status.Death) {
                     this.Die();
                 }
                 tempStatuses.push(status);
             }
         });
 
-        if (!this.IsAlive){
+        if (!this.IsAlive) {
             return;
         }
 
@@ -91,7 +97,7 @@ class Entity {
         this.Velocity.normalize().mult(this.Speed);
     }
 
-    private GetFood(): any {
+    private GetFood(): void {
         if (this.Position.equals(this.FoodTarget.Position)) {
             this.FoodTarget.Consumed = true;
             this.FoodTarget = null;
@@ -137,7 +143,7 @@ class Entity {
             return false;
         }
 
-        if (this.Partner == null){
+        if (this.Partner == null) {
             for (let candidate of entities) {
                 let condition: boolean = candidate.Gender != this.Gender && candidate.Statuses.includes(Status.UrgeToReproduce) && VectorHelper.Distance(this.Position, candidate.Position) <= this.VisionRadius + candidate.VisionRadius;
                 if (condition) {
@@ -151,15 +157,32 @@ class Entity {
         return this.Partner != null;
     }
 
-    private MoveToPartner(): any {
-        if (this.Position.equals(this.Partner.Position)) {
-            // Reproduce
-            let child: Entity = new Entity(this.Position);
-            newBorn.push(child);
+    private Reproduce(): void {
+        // Reproduce
+        let child: Entity = new Entity(this.Position);
 
-            this.Partner.ReproductiveFunction.Reset();
-            this.ReproductiveFunction.Reset();
-            this.Partner = null;
+        // Inherit the traits from parents
+        let allTraits = NumberHelper.groupBy(this.Traits.concat(this.Partner.Traits), t => t.GetTraitName());
+        allTraits.forEach(element => {
+            child.Traits.push(Trait.MergeTraits(element));
+        });
+
+        this.Traits.forEach(trait => {
+            trait.Mutate();
+            trait.ApplyModifications(this);
+        });
+
+        // Push child to the list to be processed next frame
+        newBorn.push(child);
+
+        this.Partner.ReproductiveFunction.Reset();
+        this.ReproductiveFunction.Reset();
+        this.Partner = null;
+    }
+
+    private MoveToPartner(): void {
+        if (this.Position.equals(this.Partner.Position)) {
+            this.Reproduce();
         }
         else {
             // Move to Partner
