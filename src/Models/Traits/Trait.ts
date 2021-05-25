@@ -13,7 +13,7 @@ abstract class Trait {
                 tempTrait = t.Inherit();
             }
             else{
-                tempTrait.Merge(t);
+                tempTrait.Merge(t.Inherit());
             }
         });
 

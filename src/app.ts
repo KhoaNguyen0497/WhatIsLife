@@ -31,7 +31,7 @@ function setup() {
   sideBarXLocation = windowWidth - 190;
 
   //Sidebar options
-  speed = createSlider(0, 20, 1, 0);
+  speed = createSlider(0, 50, 1, 0);
   speed.position(sideBarXLocation, 10);
   speed.style("width", "160px");
 

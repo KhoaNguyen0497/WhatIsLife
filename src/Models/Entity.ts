@@ -167,9 +167,9 @@ class Entity {
             child.Traits.push(Trait.MergeTraits(element));
         });
 
-        this.Traits.forEach(trait => {
+        child.Traits.forEach(trait => {
             trait.Mutate();
-            trait.ApplyModifications(this);
+            trait.ApplyModifications(child);
         });
 
         // Push child to the list to be processed next frame
@@ -239,13 +239,19 @@ class Entity {
 
         // Debug info
         if (debugCheckBox.checked()) {
+            let debugInterface = new EntityDebugInterface(this);
+
             color('black');
-            fill('black')
+            fill('black');
             textSize(18);
-            stroke('black')
-            text('Age: ' + this.Age, this.Position.x - 10, this.Position.y - 15);
-            text('Hunger: ' + this.Hunger.Value, this.Position.x - 10, this.Position.y - 35);
-            text('ReproductionNeed: ' + this.Statuses.includes(Status.UrgeToReproduce) + " (Partner:" + this.Partner + ")", this.Position.x - 10, this.Position.y - 50);
+            stroke('black');
+
+
+            
+            debugInterface.AppendText('Age: ' + this.Age);
+            debugInterface.AppendText('Hunger: ' + this.Hunger.Value);
+            //debugInterface.AppendText('ReproductionNeed: ' + this.Statuses.includes(Status.UrgeToReproduce) + " (Partner:" + this.Partner + ")");
+            debugInterface.AppendText('Speed: ' + this.Speed);
         }
     }
 }
