@@ -1,7 +1,11 @@
 # WhatIsLife
 Natural Selection Simulation, heavily inspired by https://www.youtube.com/watch?v=0ZGbIKd0XrM
 
-![demo](demo.gif)
+
+https://user-images.githubusercontent.com/17738936/119660426-5e7a5200-be83-11eb-9900-556184605954.mp4
+
+
+
 
 ## How to run
 ```
