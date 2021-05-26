@@ -211,8 +211,8 @@ class Entity {
         }
     }
     public Show(): void {
-        let cMale = color(255, 204, 0);
-        let cFemale = color(255, 51, 204);
+        let cMale = color(Config.MaleColor);
+        let cFemale = color(Config.FemaleColor);
         if (this.Gender == Gender.Male) {
             stroke(cMale);
         }
@@ -228,7 +228,7 @@ class Entity {
 
 
         // The entity
-        strokeWeight(Config.EnableWeightVisual ? this.Weight + 10 : 20);
+        strokeWeight(Config.EnableWeightVisual ? this.Weight + 10 : 15);
         point(this.Position.x, this.Position.y);
 
         // Line to food

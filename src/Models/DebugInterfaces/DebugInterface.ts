@@ -35,6 +35,7 @@ abstract class DebugInterface {
 
     public AppendDiv(t?: string): p5.Element {
         let div = createDiv();
+        div.value(t);
         this.AdjustLocation(div);
         return div;
     }

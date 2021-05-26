@@ -2,14 +2,12 @@
 let entities: Entity[] = [];
 
 // Frames & days
-let fps: number = 60; // PC MASTER RACE
-let framesPerDay: number = fps * 5; // A day advances every x seconds or 5x frames
+let framesPerDay: number = Config.TargetFPS * 5; // A day advances every x seconds or 5x frames
 let days: number = 0;
 let actualFrameCount: number = 0;
 
 // Settings
 let speed: p5.Element;
-let sideBarXLocation: number;
 let dayTextBox: p5.Element;
 let numOfEntitiesTextBox: p5.Element;
 let avgAgeTextBox: p5.Element;
@@ -23,26 +21,25 @@ let averageAge: number = 0;
 function setup() {
   console.log("🚀 - Setup initialized - P5 is running");
   // FULLSCREEN CANVAS
-  createCanvas(windowWidth - 200, windowHeight);
+  createCanvas(windowWidth - 250, windowHeight);
 
   // SETUP SOME OPTIONS
   rectMode(CENTER);
   frameRate(60);
-  sideBarXLocation = windowWidth - 190;
 
   //Sidebar options
-  let sidebar = new SidebarInterface(createVector(windowWidth, 0))
+  let sidebar = new SidebarInterface(createVector(width, 0))
   speed = sidebar.AppendSlider(0, 50, 1, 0, 160)
 
-  dayTextBox = sidebar.AppendDiv();
+  dayTextBox = sidebar.AppendDiv('Days: ');
 
   visionCheckBox = sidebar.AppendCheckBox('Show Vision', false)
 
   debugCheckBox = sidebar.AppendCheckBox('Show debug info', false);
 
-  numOfEntitiesTextBox = sidebar.AppendDiv();
+  numOfEntitiesTextBox = sidebar.AppendDiv('Number of Entities: ');
 
-  avgAgeTextBox = sidebar.AppendDiv();
+  avgAgeTextBox = sidebar.AppendDiv('Average Age: ');
 
   // INITIALISE LIST
   for (let i = 0; i < Config.MaxEntities; i++) {
@@ -54,7 +51,7 @@ function setup() {
 
 function draw() {
   // CLEAR BACKGROUND
-  background(200);
+  background(color(Config.BackgroundColor));
 
   // The purpose of this loop is to preprocess frames before rendering them
   // Another way to do this is to increase the speed of each Entity, but the simulation won't be accurate, though it is more performant
@@ -104,9 +101,11 @@ function drawFrame() {
     food.Show();
   });
 
-  dayTextBox.html("Current Day: " + days);
-  numOfEntitiesTextBox.html("Number of Entities: " + entities.length)
-  avgAgeTextBox.html("Average Age: " + averageAge)
+
+  // Debug panel
+  dayTextBox.html(<string>dayTextBox.value() + days);
+  numOfEntitiesTextBox.html(<string>numOfEntitiesTextBox.value() + entities.length)
+  avgAgeTextBox.html(<string>avgAgeTextBox.value() + averageAge.toFixed(1))
 
 }
 

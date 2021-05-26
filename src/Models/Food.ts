@@ -27,8 +27,8 @@ class Food
 
     public Show() : void
     {
-        strokeWeight(15);
-        stroke("green");
+        strokeWeight(8);
+        stroke(color(Config.FoodColor));
         point(this.Position.x, this.Position.y);
     }
 }

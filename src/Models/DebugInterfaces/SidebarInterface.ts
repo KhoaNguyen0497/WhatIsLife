@@ -1,7 +1,7 @@
 /// <reference path="DebugInterface.ts" />
 
 class SidebarInterface extends DebugInterface {
-    OffsetX: number = -190;
+    OffsetX: number = 20;
     OffsetY: number = 10;
     OffsetStepY: number = 40
     OffsetStepX: number = 0;
