@@ -50,9 +50,6 @@ function setup() {
 }
 
 function draw() {
-  // CLEAR BACKGROUND
-  background(color(Config.BackgroundColor));
-
   // The purpose of this loop is to preprocess frames before rendering them
   // Another way to do this is to increase the speed of each Entity, but the simulation won't be accurate, though it is more performant
   let i: number = 0;
@@ -94,6 +91,9 @@ function processFrame() {
 }
 
 function drawFrame() {
+  // CLEAR BACKGROUND
+  background(color(Config.BackgroundColor));
+  
   entities.forEach(entity => {
     entity.Show();
   });
