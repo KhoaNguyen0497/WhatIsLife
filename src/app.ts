@@ -31,24 +31,18 @@ function setup() {
   sideBarXLocation = windowWidth - 190;
 
   //Sidebar options
-  speed = createSlider(0, 50, 1, 0);
-  speed.position(sideBarXLocation, 10);
-  speed.style("width", "160px");
+  let sidebar = new SidebarInterface(createVector(windowWidth, 0))
+  speed = sidebar.AppendSlider(0, 50, 1, 0, 160)
 
-  dayTextBox = createDiv();
-  dayTextBox.position(sideBarXLocation, 50)
+  dayTextBox = sidebar.AppendDiv();
 
-  visionCheckBox = createCheckbox(' Show vision radius', false);
-  visionCheckBox.position(sideBarXLocation, 80);
+  visionCheckBox = sidebar.AppendCheckBox('Show Vision', false)
 
-  debugCheckBox = createCheckbox(' Show debug info', false);
-  debugCheckBox.position(sideBarXLocation, 110);
+  debugCheckBox = sidebar.AppendCheckBox('Show debug info', false);
 
-  numOfEntitiesTextBox = createDiv();
-  numOfEntitiesTextBox.position(sideBarXLocation, 140)
+  numOfEntitiesTextBox = sidebar.AppendDiv();
 
-  avgAgeTextBox = createDiv();
-  avgAgeTextBox.position(sideBarXLocation, 160)
+  avgAgeTextBox = sidebar.AppendDiv();
 
   // INITIALISE LIST
   for (let i = 0; i < Config.MaxEntities; i++) {
