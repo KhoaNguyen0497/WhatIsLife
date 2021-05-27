@@ -13,11 +13,14 @@ let numOfEntitiesTextBox: p5.Element;
 let avgAgeTextBox: p5.Element;
 let visionCheckBox: any;
 let debugCheckBox: any;
+let toggleGraph: p5.Element;
 
 // Some random vars. TODO: put these somewhere else
 let isNewDay: boolean = true;
 let newBorn: Entity[] = [];
 let averageAge: number = 0;
+let showGraphs: boolean = false;
+
 function setup() {
   console.log("🚀 - Setup initialized - P5 is running");
   // FULLSCREEN CANVAS
@@ -41,6 +44,9 @@ function setup() {
 
   avgAgeTextBox = sidebar.AppendDiv('Average Age: ');
 
+  toggleGraph = sidebar.AppendButton('Toggle Graphs', function () {
+    showGraphs = !showGraphs;
+  });
   // INITIALISE LIST
   for (let i = 0; i < Config.MaxEntities; i++) {
     let entity = new Entity();
@@ -58,8 +64,14 @@ function draw() {
     i++;
   }
 
+  if (showGraphs){
+    drawGraphs();
+  }
+  else{
+    drawFrame();
+  }
 
-  drawFrame();
+  updateDebugPanel();
 }
 
 function processFrame() {
@@ -93,23 +105,29 @@ function processFrame() {
 function drawFrame() {
   // CLEAR BACKGROUND
   background(color(Config.BackgroundColor));
-  
+
   entities.forEach(entity => {
     entity.Show();
   });
   foodList.forEach(food => {
     food.Show();
   });
-
-
-  // Debug panel
-  dayTextBox.html(<string>dayTextBox.value() + days);
-  numOfEntitiesTextBox.html(<string>numOfEntitiesTextBox.value() + entities.length)
-  avgAgeTextBox.html(<string>avgAgeTextBox.value() + averageAge.toFixed(1))
-
 }
+
+function drawGraphs() {
+  // CLEAR BACKGROUND
+  background(color(Config.BackgroundColor));
+}
+
 
 // p5 WILL AUTO RUN THIS FUNCTION IF THE BROWSER WINDOW SIZE CHANGES
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
+}
+
+function updateDebugPanel(){
+  // Debug panel
+  dayTextBox.html(<string>dayTextBox.value() + days);
+  numOfEntitiesTextBox.html(<string>numOfEntitiesTextBox.value() + entities.length)
+  avgAgeTextBox.html(<string>avgAgeTextBox.value() + averageAge.toFixed(1))
 }

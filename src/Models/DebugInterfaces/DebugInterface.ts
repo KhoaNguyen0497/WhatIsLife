@@ -11,13 +11,12 @@ abstract class DebugInterface {
     }
 
     private AdjustLocation(element?: p5.Element) {
-        if (element)
-        {
+        if (element) {
             element.position(this.CurrentPosition.x + this.OffsetX, this.CurrentPosition.y + this.OffsetY);
         }
 
         this.OffsetY += this.OffsetStepY;
-        this.OffsetX += this.OffsetStepX;      
+        this.OffsetX += this.OffsetStepX;
     }
 
 
@@ -40,9 +39,16 @@ abstract class DebugInterface {
         return div;
     }
 
-    public AppendCheckBox(t: string, ticked: boolean): p5.Element{
-        let checkbox = createCheckbox(" " + t,ticked); // add a space so the text doesnt stay too close to the text box
+    public AppendCheckBox(t: string, ticked: boolean): p5.Element {
+        let checkbox = createCheckbox(" " + t, ticked); // add a space so the text doesnt stay too close to the text box
         this.AdjustLocation(checkbox);
         return checkbox;
+    }
+
+    public AppendButton(label: string, f: (...arg: any[]) => any): p5.Element {
+        let button = createButton(label);
+        button.mousePressed(f);
+        this.AdjustLocation(button);
+        return button;
     }
 }
