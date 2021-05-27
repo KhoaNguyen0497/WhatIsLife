@@ -11,4 +11,6 @@ class Config {
     static MaleColor: string = "#8ECEFD";
     static BackgroundColor: string = "#30343F";
     static FoodColor: string = "#87C38F";
+
+    static DataMaxSize : number = 200;
 }

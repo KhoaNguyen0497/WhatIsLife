@@ -246,11 +246,9 @@ class Entity {
             textSize(18);
             stroke('black');
 
-
-            
             debugInterface.AppendText('Age: ' + this.Age);
             debugInterface.AppendText('Hunger: ' + this.Hunger.Value);
-            //debugInterface.AppendText('ReproductionNeed: ' + this.Statuses.includes(Status.UrgeToReproduce) + " (Partner:" + this.Partner + ")");
+            debugInterface.AppendText('ReproductionNeed: ' + this.Statuses.includes(Status.UrgeToReproduce) + " (Partner:" + this.Partner + ")");
             debugInterface.AppendText('Speed: ' + this.Speed);
         }
     }

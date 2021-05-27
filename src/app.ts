@@ -21,6 +21,9 @@ let newBorn: Entity[] = [];
 let averageAge: number = 0;
 let showGraphs: boolean = false;
 
+// Data
+let PopulationData: Point[] = [];
+
 function setup() {
   console.log("🚀 - Setup initialized - P5 is running");
   // FULLSCREEN CANVAS
@@ -53,6 +56,7 @@ function setup() {
     entities.push(entity);
   }
   Food.SpawnFood();
+  PopulationData.push({ x: days, y: entities.length })
 }
 
 function draw() {
@@ -64,14 +68,25 @@ function draw() {
     i++;
   }
 
-  if (showGraphs){
+  if (showGraphs) {
     drawGraphs();
   }
-  else{
+  else {
     drawFrame();
   }
 
   updateDebugPanel();
+}
+
+function TriggerNewDay(currentDay: number) {
+  isNewDay = true;
+  days = currentDay;
+  Food.SpawnFood();
+
+  PopulationData.push({ x: days, y: entities.length });
+  if (PopulationData.length > Config.DataMaxSize) {
+    PopulationData.shift();
+  }
 }
 
 function processFrame() {
@@ -79,9 +94,7 @@ function processFrame() {
   // Check for day change to trigger certain events
   let tempDay: number = floor(actualFrameCount / framesPerDay);
   if (tempDay > days) {
-    days = tempDay;
-    Food.SpawnFood();
-    isNewDay = true;
+    TriggerNewDay(tempDay);
   }
 
   averageAge = 0;
@@ -117,6 +130,8 @@ function drawFrame() {
 function drawGraphs() {
   // CLEAR BACKGROUND
   background(color(Config.BackgroundColor));
+  let populationGraph = new LineGraph(createVector(100, 100), PopulationData);
+  populationGraph.Draw();
 }
 
 
@@ -125,7 +140,7 @@ function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
 
-function updateDebugPanel(){
+function updateDebugPanel() {
   // Debug panel
   dayTextBox.html(<string>dayTextBox.value() + days);
   numOfEntitiesTextBox.html(<string>numOfEntitiesTextBox.value() + entities.length)
