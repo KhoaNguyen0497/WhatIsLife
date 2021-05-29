@@ -162,7 +162,7 @@ class Entity {
         let child: Entity = new Entity(this.Position);
 
         // Inherit the traits from parents
-        let allTraits = NumberHelper.groupBy(this.Traits.concat(this.Partner.Traits), t => t.GetTraitName());
+        let allTraits = ArrayHelper.GroupBy(this.Traits.concat(this.Partner.Traits), t => t.GetTraitName());
         allTraits.forEach(element => {
             child.Traits.push(Trait.MergeTraits(element));
         });

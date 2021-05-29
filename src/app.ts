@@ -2,9 +2,9 @@
 let entities: Entity[] = [];
 
 // Frames & days
-let framesPerDay: number = Config.TargetFPS * 5; // A day advances every x seconds or 5x frames
-let days: number = 0;
-let actualFrameCount: number = 0;
+let framesPerDay: number = 150; // A day advances every x movement updates
+let days: number = -1;
+let movementUpdateCount: number = 0;
 
 // Settings
 let speed: p5.Element;
@@ -20,9 +20,10 @@ let isNewDay: boolean = true;
 let newBorn: Entity[] = [];
 let averageAge: number = 0;
 let showGraphs: boolean = false;
-
+let startTime : number = new Date().getTime();
 // Data
 let PopulationData: Point[] = [];
+let fpsData: Point[] = [];
 
 function setup() {
   console.log("🚀 - Setup initialized - P5 is running");
@@ -31,7 +32,7 @@ function setup() {
 
   // SETUP SOME OPTIONS
   rectMode(CENTER);
-  frameRate(60);
+  frameRate(Config.TargetFPS);
 
   //Sidebar options
   let sidebar = new SidebarInterface(createVector(width, 0))
@@ -55,11 +56,13 @@ function setup() {
     let entity = new Entity();
     entities.push(entity);
   }
-  Food.SpawnFood();
-  PopulationData.push({ x: days, y: entities.length })
 }
 
 function draw() {
+  fpsData.push({ x: new Date().getTime() - startTime, y: frameRate() });
+  if (fpsData.length > Config.TargetFPS * 10){
+    fpsData.shift();
+  }
   // The purpose of this loop is to preprocess frames before rendering them
   // Another way to do this is to increase the speed of each Entity, but the simulation won't be accurate, though it is more performant
   let i: number = 0;
@@ -90,9 +93,9 @@ function TriggerNewDay(currentDay: number) {
 }
 
 function processFrame() {
-  actualFrameCount += 1;
+  movementUpdateCount += 1;
   // Check for day change to trigger certain events
-  let tempDay: number = floor(actualFrameCount / framesPerDay);
+  let tempDay: number = floor(movementUpdateCount / framesPerDay);
   if (tempDay > days) {
     TriggerNewDay(tempDay);
   }
@@ -130,8 +133,10 @@ function drawFrame() {
 function drawGraphs() {
   // CLEAR BACKGROUND
   background(color(Config.BackgroundColor));
-  let populationGraph = new LineGraph(createVector(100, 100), PopulationData);
+  let populationGraph = new LineGraph(createVector(120, 120), PopulationData, "Population", "Day", "Number of Entities", 50);
+  let fpsGraph = new LineGraph(createVector(900, 120), fpsData, "FPS", "Time (milliseconds)", "FPS", 5000); 
   populationGraph.Draw();
+  fpsGraph.Draw();
 }
 
 
@@ -144,5 +149,5 @@ function updateDebugPanel() {
   // Debug panel
   dayTextBox.html(<string>dayTextBox.value() + days);
   numOfEntitiesTextBox.html(<string>numOfEntitiesTextBox.value() + entities.length)
-  avgAgeTextBox.html(<string>avgAgeTextBox.value() + averageAge.toFixed(1))
+  avgAgeTextBox.html(<string>avgAgeTextBox.value() + averageAge.toFixed(1));
 }
