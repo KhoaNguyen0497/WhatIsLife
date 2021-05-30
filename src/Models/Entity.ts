@@ -67,6 +67,7 @@ class Entity {
             if (condition(this)) {
                 if (status == Status.Death) {
                     this.Die();
+                    lifeExpectancyGraph.Update({ x: days, y: this.Age });
                 }
                 tempStatuses.push(status);
             }

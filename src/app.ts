@@ -9,8 +9,6 @@ let movementUpdateCount: number = 0;
 // Settings
 let speed: p5.Element;
 let dayTextBox: p5.Element;
-let numOfEntitiesTextBox: p5.Element;
-let avgAgeTextBox: p5.Element;
 let visionCheckBox: any;
 let debugCheckBox: any;
 let toggleGraph: p5.Element;
@@ -27,6 +25,8 @@ let startTime: number = new Date().getTime();
 let populationGraph: LineGraph;
 let fpsGraph: LineGraph;
 let speedGraph: LineGraph;
+let drainRateGraph : LineGraph;
+let lifeExpectancyGraph : LineGraph;
 
 function setup() {
   console.log("🚀 - Setup initialized - P5 is running");
@@ -39,7 +39,7 @@ function setup() {
 
   //Sidebar options
   let sidebar = new SidebarInterface(createVector(width, 0))
-  speed = sidebar.AppendSlider(0, 50, 1, 0, 160)
+  speed = sidebar.AppendSlider(0, 100, 1, 0, 160)
 
   dayTextBox = sidebar.AppendDiv('Days: ');
 
@@ -47,17 +47,15 @@ function setup() {
 
   debugCheckBox = sidebar.AppendCheckBox('Show debug info', false);
 
-  numOfEntitiesTextBox = sidebar.AppendDiv('Number of Entities: ');
-
-  avgAgeTextBox = sidebar.AppendDiv('Average Age: ');
-
   toggleGraph = sidebar.AppendButton('Toggle Graphs', function () {
     showGraphs = !showGraphs;
   });
 
   populationGraph = new LineGraph(createVector(120, 120), "Population", "Day", "Number of Entities", 50, 200);
   fpsGraph = new LineGraph(createVector(900, 120), "FPS", "Time (milliseconds)", "FPS", 5000, Config.TargetFPS * 10);
-  speedGraph = new LineGraph(createVector(1680, 120), "Speed", "Day", "Average Speed", 50, 200)
+  speedGraph = new LineGraph(createVector(1680, 120), "Speed", "Day", "Average Speed", 50, 200);
+  drainRateGraph = new LineGraph(createVector(120, 700), "Drain Rate", "Day", "Rate", 50, 200)
+  lifeExpectancyGraph = new LineGraph(createVector(900, 700), "Life Expectancy", "Day", "Age", 50, 1000)
 
   // INITIALISE LIST
   for (let i = 0; i < Config.MaxEntities; i++) {
@@ -92,6 +90,7 @@ function TriggerNewDay(currentDay: number) {
   Food.SpawnFood();
   populationGraph.Update({ x: days, y: entities.length })
   speedGraph.Update({ x: days, y: ArrayHelper.Average(entities.map(x => x.Speed)) });
+  drainRateGraph.Update({ x: days, y: ArrayHelper.Average(entities.map(x => x.Stamina.DrainRate)) });
 }
 
 function processFrame() {
@@ -138,6 +137,8 @@ function drawGraphs() {
   populationGraph.Draw();
   fpsGraph.Draw();
   speedGraph.Draw();
+  drainRateGraph.Draw();
+  lifeExpectancyGraph.Draw();
 }
 
 
@@ -149,6 +150,4 @@ function windowResized() {
 function updateDebugPanel() {
   // Debug panel
   dayTextBox.html(<string>dayTextBox.value() + days);
-  numOfEntitiesTextBox.html(<string>numOfEntitiesTextBox.value() + entities.length)
-  avgAgeTextBox.html(<string>avgAgeTextBox.value() + averageAge.toFixed(1));
 }

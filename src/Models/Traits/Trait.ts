@@ -1,5 +1,5 @@
 abstract class Trait {
-    MutationChance: number = 10
+    MutationChance: number = 100
     GetTraitName(): string {
         return this.constructor.name;
     }

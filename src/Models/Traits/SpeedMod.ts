@@ -16,7 +16,7 @@ class SpeedMod extends Trait {
     }
     ApplyModifications(entity: Entity): void {
         entity.Speed += this.BaseValue;
-
+        entity.Stamina.DrainRate += this.BaseValue  * 2;
         // Speed should not go below 1
         entity.Speed = max(entity.Speed, 1);
     }

@@ -10,7 +10,7 @@ class LineGraph extends BaseGraph {
     MainTitle: string;
     IntervalX: number;
     LineColor: p5.Color = color("#F8C630");
-    AverageLineColor :p5.Color = color("#3E92CC");
+    AverageLineColor: p5.Color = color("#3E92CC");
     DataMaxSize: number;
 
     private YLabelOffset: number = -75;
@@ -36,24 +36,31 @@ class LineGraph extends BaseGraph {
         push();
         strokeWeight(1)
         stroke(this.LineColor)
-        let average = this.Data[this.Data.length - 1].y;
-        for (let i = 0; i < this.Data.length - 1; i++) {
-            p1 = this.CalculateRelativePosition(this.Data[i]);
-            p2 = this.CalculateRelativePosition(this.Data[i + 1]);
-            average += this.Data[i].y;
-            // +-1 pixel to x and y so the line doesnt sit directly on the axes
-            line(p1.x + 1, p1.y - 1, p2.x + 1, p2.y - 1);
+        if (this.Data.length > 0) {
+            let average = this.Data[this.Data.length - 1].y;
+            for (let i = 0; i < this.Data.length - 1; i++) {
+                p1 = this.CalculateRelativePosition(this.Data[i]);
+                p2 = this.CalculateRelativePosition(this.Data[i + 1]);
+                average += this.Data[i].y;
+                // +-1 pixel to x and y so the line doesnt sit directly on the axes
+                line(p1.x + 1, p1.y - 1, p2.x + 1, p2.y - 1);
+            }
+
+            // Average line
+            average = average / this.Data.length;
+            stroke(this.AverageLineColor)
+            pAverage = this.CalculateRelativePosition({ x: 0, y: average });
+            line(this.Position.x, pAverage.y, this.Position.x + this.Width, pAverage.y)
+
+            // Average text value
+            stroke(color('black'))
+            strokeWeight(1)
+            textSize(18);
+            textAlign(RIGHT);
+            text(round(average * 10) / 10, this.Position.x + this.YLabelOffset / 4, pAverage.y);
         }
-        average = average / this.Data.length;
-        stroke(this.AverageLineColor)
-        pAverage = this.CalculateRelativePosition({ x: 0, y: average });
-        line(this.Position.x, pAverage.y, this.Position.x + this.Width, pAverage.y)
-        stroke(color('black'))
-        strokeWeight(1)
-        textSize(18);
-        textAlign(RIGHT);
-        text(round(average * 10) / 10, this.Position.x + this.YLabelOffset / 4, pAverage.y);
-        pop()
+        pop();
+
         // Draw these last so they are always on top
         this.DrawAxes();
         this.DrawLabels();
