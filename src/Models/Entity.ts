@@ -128,7 +128,7 @@ class Entity {
         // Find a new one
         else {
             for (let food of foodList) {
-                if (VectorHelper.Distance(this.Position, food.Position) <= this.VisionRadius) {
+                if (VectorHelper.WithinDistance(this.Position, food.Position, this.VisionRadius)) {
                     this.FoodTarget = food;
                     break;
                 }
@@ -145,7 +145,7 @@ class Entity {
 
         if (this.Partner == null) {
             for (let candidate of entities) {
-                let condition: boolean = candidate.Gender != this.Gender && candidate.Statuses.includes(Status.UrgeToReproduce) && VectorHelper.Distance(this.Position, candidate.Position) <= this.VisionRadius + candidate.VisionRadius;
+                let condition: boolean = candidate.Gender != this.Gender && candidate.Statuses.includes(Status.UrgeToReproduce) && VectorHelper.WithinDistance(this.Position, candidate.Position, this.VisionRadius + candidate.VisionRadius);
                 if (condition) {
                     this.Partner = candidate;
                     candidate.Partner = this;
