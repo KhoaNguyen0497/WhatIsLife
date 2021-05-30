@@ -19,11 +19,14 @@ let toggleGraph: p5.Element;
 let isNewDay: boolean = true;
 let newBorn: Entity[] = [];
 let averageAge: number = 0;
-let showGraphs: boolean = false;
-let startTime : number = new Date().getTime();
-// Data
-let PopulationData: Point[] = [];
-let fpsData: Point[] = [];
+let showGraphs: boolean = true;
+let startTime: number = new Date().getTime();
+
+
+// Graphs
+let populationGraph: LineGraph;
+let fpsGraph: LineGraph;
+let speedGraph: LineGraph;
 
 function setup() {
   console.log("🚀 - Setup initialized - P5 is running");
@@ -51,6 +54,11 @@ function setup() {
   toggleGraph = sidebar.AppendButton('Toggle Graphs', function () {
     showGraphs = !showGraphs;
   });
+
+  populationGraph = new LineGraph(createVector(120, 120), "Population", "Day", "Number of Entities", 50, 200);
+  fpsGraph = new LineGraph(createVector(900, 120), "FPS", "Time (milliseconds)", "FPS", 5000, Config.TargetFPS * 10);
+  speedGraph = new LineGraph(createVector(1680, 120), "Speed", "Day", "Average Speed", 50, 200)
+
   // INITIALISE LIST
   for (let i = 0; i < Config.MaxEntities; i++) {
     let entity = new Entity();
@@ -59,10 +67,7 @@ function setup() {
 }
 
 function draw() {
-  fpsData.push({ x: new Date().getTime() - startTime, y: frameRate() });
-  if (fpsData.length > Config.TargetFPS * 10){
-    fpsData.shift();
-  }
+  fpsGraph.Update({ x: new Date().getTime() - startTime, y: frameRate() });
   // The purpose of this loop is to preprocess frames before rendering them
   // Another way to do this is to increase the speed of each Entity, but the simulation won't be accurate, though it is more performant
   let i: number = 0;
@@ -85,11 +90,8 @@ function TriggerNewDay(currentDay: number) {
   isNewDay = true;
   days = currentDay;
   Food.SpawnFood();
-
-  PopulationData.push({ x: days, y: entities.length });
-  if (PopulationData.length > Config.DataMaxSize) {
-    PopulationData.shift();
-  }
+  populationGraph.Update({ x: days, y: entities.length })
+  speedGraph.Update({ x: days, y: ArrayHelper.Average(entities.map(x => x.Speed)) });
 }
 
 function processFrame() {
@@ -133,10 +135,9 @@ function drawFrame() {
 function drawGraphs() {
   // CLEAR BACKGROUND
   background(color(Config.BackgroundColor));
-  let populationGraph = new LineGraph(createVector(120, 120), PopulationData, "Population", "Day", "Number of Entities", 50);
-  let fpsGraph = new LineGraph(createVector(900, 120), fpsData, "FPS", "Time (milliseconds)", "FPS", 5000); 
   populationGraph.Draw();
   fpsGraph.Draw();
+  speedGraph.Draw();
 }
 
 

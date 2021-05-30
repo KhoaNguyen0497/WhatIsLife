@@ -14,7 +14,17 @@ class ArrayHelper {
     }
 
     public static Sum(list: number[]): number {
+        if (list.length == 0){
+            return 0;
+        }
         const reducer = (accumulator: number, currentValue: number) => accumulator + currentValue;
         return list.reduce(reducer);
+    }
+
+    public static Average(list: number[]) : number{
+        if (list.length == 0){
+            return 0;
+        }
+        return this.Sum(list) / list.length;
     }
 }
