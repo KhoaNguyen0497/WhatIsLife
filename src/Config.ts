@@ -1,6 +1,6 @@
 class Config {
     static EnableWeightVisual: boolean = false;
-    static MaxFood: number = 50;
+    static MaxFood: number = 300;
     static MaxEntities: number = 20;
     static DisableDeath: boolean = false;
     static BaseSpeed: number = 5;

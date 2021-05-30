@@ -4,7 +4,7 @@
 let StatusConditions : Map<Status, (e: Entity) => boolean> = new Map<Status, (e: Entity) => boolean>();
 // Statuses are checked every frame
 StatusConditions.set(Status.Hungry, (e: Entity) => {
-    return e.Hunger.Value <= e.Hunger.HungryThreshold
+    return e.Stamina.Value <= e.Stamina.HungryThreshold
 });
 
 StatusConditions.set(Status.UrgeToReproduce, (e: Entity) => {
@@ -26,7 +26,7 @@ StatusConditions.set(Status.Death, (e: Entity) => {
     }
     if (isNewDay){
         // 50% chance to die every day if its critical
-        if (e.Hunger.Value < e.Hunger.CriticalThreshold){
+        if (e.Stamina.Value < e.Stamina.CriticalThreshold){
             if (NumberHelper.RandomPercentage(50)){
                 return true;
             }

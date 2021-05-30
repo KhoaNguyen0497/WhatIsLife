@@ -1,4 +1,4 @@
-class Hunger {
+class Stamina {
     Value: number = 100;
     CriticalThreshold = 10; // Threshold - condition for a few things
     HungryThreshold = 60 // Threshold that triggers the Hungry status

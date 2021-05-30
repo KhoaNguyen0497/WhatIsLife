@@ -24,7 +24,7 @@ class Entity {
     Partner: Entity = null;
 
     // Survival Mechanics
-    Hunger: Hunger = new Hunger(this);
+    Stamina: Stamina = new Stamina(this);
     ReproductiveFunction: ReproductiveFunction = new ReproductiveFunction(this);
 
     // Traits and Statuses
@@ -78,7 +78,7 @@ class Entity {
 
         this.Statuses = tempStatuses;
 
-        this.Hunger.Update();
+        this.Stamina.Update();
         this.ReproductiveFunction.Update();
 
         if (this.FindFood()) {
@@ -101,7 +101,7 @@ class Entity {
         if (this.Position.equals(this.FoodTarget.Position)) {
             this.FoodTarget.Consumed = true;
             this.FoodTarget = null;
-            this.Hunger.Value += this.Hunger.FoodValue;
+            this.Stamina.Value += this.Stamina.FoodValue;
             this.Weight += 1;
         }
         else {
@@ -247,7 +247,7 @@ class Entity {
             stroke('black');
 
             debugInterface.AppendText('Age: ' + this.Age);
-            debugInterface.AppendText('Hunger: ' + this.Hunger.Value);
+            debugInterface.AppendText('Stamina: ' + this.Stamina.Value);
             debugInterface.AppendText('ReproductionNeed: ' + this.Statuses.includes(Status.UrgeToReproduce) + " (Partner:" + this.Partner + ")");
             debugInterface.AppendText('Speed: ' + this.Speed);
         }
